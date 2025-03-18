@@ -1,0 +1,35 @@
+services:
+  redis:
+    image: "redis:alpine"
+  ollama:
+    image: "ollama/ollama"
+    ports:
+      - "11434:11434"
+    volumes:
+      - type: bind
+        source: ./.docker/ollama
+        target: /root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  parser:
+    build: ./web/
+    ports: 
+      - 8080:9000
+    develop:
+      watch:
+        - action: sync
+          path: ./web/src
+          target: /site/src
+  basic-ui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    volumes:
+      - type: bind
+        source: ./.docker/basicui
+        target: /app/backend/data
