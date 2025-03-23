@@ -1,47 +1,62 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="This is gettnig watched and should 'auto' update component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="row items-center justify-evenly"
+    >
+    <div class="q-pa-md" style="height: calc(100vh - 50px); width: 100%;">
+    <q-splitter
+      v-model="splitter"
+      style="
+        height:100%;
+        width:100%;
+        overflow:hidden;
+        border-radius:20px;"
+      range="[10,80]"
+    >
+      <template v-slot:before>
+          <div class="q-pa-md" style="background-color: aliceblue;
+            width: 100%;
+            height: 100%;
+            " >
+            <pdf-tree pathOfPDF="http://localhost:8080/pdfs/Laws of the Game 2024_25.pdf" pdfName="Trial" />
+          </div>
+        </template>
+    <template v-slot:separator>
+          <div style="background-color: lightgray; width: 5px;
+            height: 100%;" >
+          </div>
+    </template>
+        <template v-slot:after>
+          <div class="col q-pa-md" style="background-color: aliceblue; width: 100%;
+            height: 100%; " >
+  <pdf-renderer pathOfPDF="http://localhost:8080/pdfs/Laws of the Game 2024_25.pdf" pdfName="Trial"/>
+          </div>
+        </template>
+      </q-splitter>
+      </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+  //
+  //<pdf-renderer pathOfPDF="http://localhost:8080/pdfs/Board Governance Policy.pdf" pdfName="Trial"/>
+  //<pdf-renderer pathOfPDF="http://localhost:8080/pdfs/Laws of the Game 2024_25.pdf" pdfName="Trial"/>
 
-defineOptions({
-  name: 'IndexPage'
-});
+  import { ref } from 'vue';
+  import PdfRenderer from '../components/PDF/PdfRenderer.vue';
+  import PdfTree from '../components/PDF/PdfTree.vue';
+  const splitter = ref(20);
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
-  }
-]);
+  defineOptions({
+    name: 'IndexPage'
+  });
 
-const meta = ref<Meta>({
-  totalCount: 1200
-});
 </script>
+
+<style>
+.hiddenCanvasElement {
+  position: absolute;
+  height:0;
+  width:0;
+  top:0;
+  z-index:-1;
+}
+</style>
